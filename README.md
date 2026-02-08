@@ -193,9 +193,3 @@ Uma API RESTful **production-ready** com:
 - ✔ Arquitetura limpa e escalável
 - ✔ Documentação interativa com Swagger
 - ✔ Tratamento de erros consistente
-
----
-
-## 📝 Licença
-
-Este projeto está aberto para uso e modificação.
