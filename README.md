@@ -60,12 +60,12 @@ Retorna apenas token.
 
 * Rotas Protegidas
 
-| Método |	| Endpoint | 	| Permissão |	| Retorno |
-| -------- | | -------- | | -------- | | -------- |
-| GET |	| /api/users |	| Autenticado |	| Lista (nome, email, avatar) |
-| GET |	| /api/users/:id |	| Autenticado |	| Dados completos |
-| PUT |	| /api/users/:id |	| Admin ou si mesmo |	| Usuário atualizado |
-| DELETE |	| /api/users/:id |	| Admin ou si mesmo |	| Mensagem de sucesso |
+| Método | Endpoint | Permissão | Retorno |
+| --- | --- | --- | --- |
+| GET | /api/users | Autenticado | Lista (nome, email, avatar) |
+| GET | /api/users/:id | Autenticado | Dados completos |
+| PUT | /api/users/:id | Admin ou si mesmo | Usuário atualizado |
+| DELETE | /api/users/:id | Admin ou si mesmo | Mensagem de sucesso |
 
 
 * Permissões
