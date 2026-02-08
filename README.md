@@ -1,95 +1,201 @@
 # KTech-Kambo
+
 ## User API - CRUD com Autenticação JWT
-### Descrição
- API RESTful para gerenciamento de usuários com hierarquia de permissões (admin/user), implementada em TypeScript com arquitetura em camadas.
 
-* Tecnologias
-Node.js + Express + TypeScript
+### 📋 Descrição
 
-MongoDB + Mongoose
+API RESTful completa para gerenciamento de usuários com hierarquia de permissões (admin/user), implementada em **TypeScript** com arquitetura em camadas. A API oferece autenticação segura via JWT, validação de dados com Zod, e documentação interativa com Swagger.
 
-JWT + bcryptjs
+---
 
-Zod (validação)
+## 🛠️ Tecnologias
 
-Swagger UI (documentação)
+| Categoria | Tecnologia |
+|-----------|-----------|
+| **Runtime** | Node.js |
+| **Framework** | Express |
+| **Linguagem** | TypeScript |
+| **Banco de Dados** | MongoDB + Mongoose |
+| **Segurança** | JWT + bcryptjs |
+| **Validação** | Zod |
+| **Documentação** | Swagger UI |
 
-* Instalação
-Clone o projeto e instale dependências:
+---
 
-```
+## 📦 Instalação
+
+### 1. Clone o projeto e instale dependências:
+
+```bash
+git clone https://github.com/DenisVitor/KTech-Kambo.git
+cd KTech-Kambo
 npm install
 ```
 
-* Configure o .env:
+### 2. Configure o arquivo `.env`:
 
+```env
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/userapi
 JWT_SECRET=supersecretkey123
-
-
-* Inicie o servidor:
-
 ```
+
+> **Nota:** Para produção, altere `JWT_SECRET` para uma chave forte e segura.
+
+### 3. Inicie o servidor:
+
+```bash
 npm run dev
 ```
 
-* Campos do Usuário Obrigatórios
+O servidor estará disponível em `http://localhost:3000`
 
-- name (string, min 2 chars)
-- email (string válido)
-- password (string, min 6 chars)
+---
 
-* Opcionais
-avatar, age (min 18), city, role (admin/user), phone
+## 👤 Campos do Usuário
 
-* Autenticação 
+### Obrigatórios
 
-- Registro
-- POST /api/users/register
+| Campo | Tipo | Restrição |
+|-------|------|-----------|
+| `name` | string | Mínimo 2 caracteres |
+| `email` | string | Email válido |
+| `password` | string | Mínimo 6 caracteres |
+
+### Opcionais
+
+- `avatar` (string/URL)
+- `age` (number, mínimo 18)
+- `city` (string)
+- `role` (enum: "admin" ou "user", padrão: "user")
+- `phone` (string)
+
+---
+
+## 🔐 Autenticação
+
+### Registro
+
+**POST** `/api/users/register`
+
+```json
+{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+
+**Resposta de sucesso (201):**
+```json
+{
+  "message": "Usuário criado com sucesso",
+  "userId": "uuid"
+}
+```
+
+### Login
+
+**POST** `/api/users/login`
+
+```json
+{
+  "email": "joao@email.com",
+  "password": "123456"
+}
+```
+
+**Resposta de sucesso (200):**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+---
+
+## 🔒 Rotas Protegidas
+
+Todas as rotas abaixo requerem o token JWT no header `Authorization: Bearer {token}`
+
+| Método | Endpoint | Permissão | Descrição |
+|--------|----------|-----------|-----------|
+| **GET** | `/api/users` | Autenticado | Retorna lista de usuários (nome, email, avatar) |
+| **GET** | `/api/users/:id` | Autenticado | Retorna dados completos do usuário |
+| **PUT** | `/api/users/:id` | Admin ou proprietário | Atualiza dados do usuário |
+| **DELETE** | `/api/users/:id` | Admin ou proprietário | Deleta o usuário |
+
+---
+
+## 🎯 Sistema de Permissões
+
+| Role | Permissões |
+|------|-----------|
+| **Admin** | Gerencia todos os usuários (ler, editar, deletar) |
+| **User** | Lê todos os usuários, mas só pode editar/deletar a si mesmo |
+
+---
+
+## 📚 Documentação Interativa
+
+Acesse a documentação Swagger em:
 
 ```
-{"name": "João", "email": "joao@email.com", "password": "123456"}
-```
-
-- Login
-- POST /api/users/login
-
-Retorna apenas token.
-
-
-* Rotas Protegidas
-
-| Método | Endpoint | Permissão | Retorno |
-| --- | --- | --- | --- |
-| GET | /api/users | Autenticado | Lista (nome, email, avatar) |
-| GET | /api/users/:id | Autenticado | Dados completos |
-| PUT | /api/users/:id | Admin ou si mesmo | Usuário atualizado |
-| DELETE | /api/users/:id | Admin ou si mesmo | Mensagem de sucesso |
-
-
-* Permissões
-
-- Admin: Gerencia todos os usuários
-- User: Lê todos, modifica/deleta apenas si mesmo
-
-* Documentação
-
 http://localhost:3000/api/docs
-
-* Scripts
-```
-npm run dev   # Desenvolvimento
-npm run start # Produção
 ```
 
-* Status HTTP
-- 200: OK
-- 201: Created
-- 400: Bad Request
-- 401: Unauthorized
-- 403: Forbidden
-- 404: Not Found
+Nesta interface você pode testar todos os endpoints da API diretamente.
 
-* Resumo
-CRUD completo com autenticação JWT, validação Zod, hierarquia de permissões, arquitetura limpa e documentação Swagger. Production ready.
+---
+
+## 🚀 Scripts Disponíveis
+
+```bash
+npm run dev    # Inicia o servidor em modo desenvolvimento com hot-reload
+npm run start  # Inicia o servidor em modo produção
+```
+
+---
+
+## 📊 Respostas HTTP
+
+| Status | Descrição |
+|--------|-----------|
+| **200** | OK - Requisição bem-sucedida |
+| **201** | Created - Recurso criado com sucesso |
+| **400** | Bad Request - Erro na validação dos dados |
+| **401** | Unauthorized - Token inválido ou ausente |
+| **403** | Forbidden - Sem permissão para acessar este recurso |
+| **404** | Not Found - Usuário/recurso não encontrado |
+| **500** | Internal Server Error - Erro no servidor |
+
+---
+
+## 🏗️ Arquitetura
+
+A aplicação segue uma arquitetura em camadas:
+
+- **Controllers:** Manipulam requisições e respostas HTTP
+- **Services:** Contêm a lógica de negócio
+- **Models:** Definição dos schemas do MongoDB
+- **Middleware:** Autenticação, validação e tratamento de erros
+- **Routes:** Definição das rotas da API
+
+---
+
+## ✅ Resumo
+
+Uma API RESTful **production-ready** com:
+- ✔ CRUD completo de usuários
+- ✔ Autenticação segura com JWT
+- ✔ Validação robusta com Zod
+- ✔ Hierarquia de permissões (admin/user)
+- ✔ Arquitetura limpa e escalável
+- ✔ Documentação interativa com Swagger
+- ✔ Tratamento de erros consistente
+
+---
+
+## 📝 Licença
+
+Este projeto está aberto para uso e modificação.
